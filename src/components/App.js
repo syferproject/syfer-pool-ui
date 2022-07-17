@@ -1,14 +1,11 @@
 import AppContextProvider from './ContextProvider';
+import Stats from './Stats';
 
 
-function App() {
-  return (
-    <AppContextProvider>
-      <div>
-        Conceal Community Pool
-      </div>
-    </AppContextProvider>
-  );
-}
+const App = () => (
+  <AppContextProvider>
+    <Stats />
+  </AppContextProvider>
+)
 
 export default App;
