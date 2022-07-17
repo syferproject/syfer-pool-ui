@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { FormattedAmount } from '../helpers/utils';
+import { CCXExplorerLink, FormattedAmount } from '../helpers/utils';
 
 import { AppContext } from './ContextProvider';
 
@@ -19,7 +19,7 @@ const Stats = () => {
 
       <h3>Network Stats</h3>
       <div>Network Difficulty: {networkStats?.difficulty?.toLocaleString()}</div>
-      <div>Current Hash: {networkStats?.hash}</div>
+      <div>Current Hash: <CCXExplorerLink hash={networkStats?.hash} shortHash type="block" /></div>
       <div>Current Height: {networkStats?.height?.toLocaleString()}</div>
       <div>Timestamp: {new Date(networkStats?.ts * 1000).toLocaleString()}</div>
       <div>Reward: <FormattedAmount amount={networkStats?.value / poolConfig?.sig_divisor} /></div>

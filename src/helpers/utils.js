@@ -59,3 +59,23 @@ export const FormattedAmount = props => {
     </>
   );
 };
+
+export const CCXExplorerLink = props => {
+  const { state } = useContext(AppContext);
+  const { appSettings } = state;
+  const {
+    hash,
+    type = 'transaction',
+    shortHash = false,
+  } = props;
+
+  return (
+    <a
+      href={`${appSettings.explorerURL}/index.html?hash=${hash}#blockchain_${type}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {shortHash ? `${hash?.slice(0, 8)}...` : hash}
+    </a>
+  );
+};
