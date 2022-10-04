@@ -5,7 +5,8 @@ import { constants as appSettings } from './constants';
 
 const initialState = () => ({
   appSettings,
-  intervals: [],
+  minersIntervals: [],
+  poolIntervals: [],
 
   poolConfig: {},
   networkStats: {},
@@ -13,7 +14,7 @@ const initialState = () => ({
   poolMinersChart: [],
   poolStats: {},
 
-  wallets: {},
+  miners: {},
 });
 
 let updatedState;
@@ -31,6 +32,27 @@ const reducer = (state, action) => {
       result = {
         ...state,
         networkStats: action.networkStats,
+      };
+      break;
+    case 'SET_MINERS':
+      result = {
+        ...state,
+        miners: action.miners,
+      };
+      break;
+    case 'UPDATE_MINER':
+      result = {
+        ...state,
+        miners: {
+          ...state.miners,
+          [action.address]: {
+            chartData: { ...state.miners[action.address]?.chartData, ...action?.chartData },
+            identifiers: action?.identifiers || state.miners[action.address]?.identifiers,
+            payments: action?.payments || state.miners[action.address]?.payments,
+            stats: { ...state.miners[action.address]?.stats, ...action?.stats },
+            workers: { ...state.miners[action.address]?.workers, ...action?.workers },
+          },
+        },
       };
       break;
     case 'UPDATE_POOL_BLOCKS':
@@ -51,19 +73,35 @@ const reducer = (state, action) => {
         poolStats: action.poolStats,
       };
       break;
-    case 'SET_INTERVALS':
-      const intervals = action.intervals.map(i => setInterval(i.fn, i.time * 1000));
+    case 'CLEAR_MINERS_INTERVALS':
+      state.minersIntervals.forEach(interval => clearInterval(interval));
       result = {
         ...state,
-        intervals,
+        minersIntervals: [],
+      };
+      break;
+    case 'SET_MINERS_INTERVALS':
+      const minersIntervals = action.intervals.map(i => setInterval(i.fn, i.time * 1000));
+      result = {
+        ...state,
+        minersIntervals,
+      };
+      break;
+    case 'SET_POOL_INTERVALS':
+      const poolIntervals = action.intervals.map(i => setInterval(i.fn, i.time * 1000));
+      result = {
+        ...state,
+        poolIntervals,
       };
       break;
     case 'CLEAR_APP':
-      state.intervals.forEach(interval => clearInterval(interval));
+      state.minersIntervals.forEach(interval => clearInterval(interval));
+      state.poolIntervals.forEach(interval => clearInterval(interval));
       result = {
         ...state,
         wallets: {},
-        intervals: [],
+        minersIntervals: [],
+        poolIntervals: [],
       };
       break;
     default:

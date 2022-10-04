@@ -4,10 +4,40 @@ export default class ApiHelper {
     // this.auth = options.Auth;
   }
 
+  qs = params => Object.keys(params).map(key => `${key}=${params[key]}`).join('&');
+
   getConfig = () => {
     return this.fetch(`${this.apiURL}/config`)
       .then(res => Promise.resolve(res));
   };
+
+  getMinerChart = address => {
+    return this.fetch(`${this.apiURL}/miner/${address}/chart/hashrate/allWorkers`)
+      .then(res => Promise.resolve(res));
+  }
+
+  getMinerIdentifiers = address => {
+    return this.fetch(`${this.apiURL}/miner/${address}/identifiers`)
+      .then(res => Promise.resolve(res));
+  }
+
+  getMinerPayments = (address, page, limit) => {
+    const params = {};
+    if (limit) params.limit = limit;
+    if (page) params.page = page;
+    return this.fetch(`${this.apiURL}/miner/${address}/payments?${this.qs(params)}`)
+      .then(res => Promise.resolve(res));
+  }
+
+  getMinerStats = address => {
+    return this.fetch(`${this.apiURL}/miner/${address}/stats`)
+      .then(res => Promise.resolve(res));
+  }
+
+  getMinerWorkers = address => {
+    return this.fetch(`${this.apiURL}/miner/${address}/stats/allWorkers`)
+      .then(res => Promise.resolve(res));
+  }
 
   getNetworkStats = () => {
     return this.fetch(`${this.apiURL}/network/stats`)
@@ -15,6 +45,7 @@ export default class ApiHelper {
   };
 
   getPoolBlocks = () => {
+    // https://pool.conceal.network/api/pool/blocks/pplns
     return this.fetch(`${this.apiURL}/pool/blocks`)
       .then(res => Promise.resolve(res));
   };
@@ -25,6 +56,7 @@ export default class ApiHelper {
   };
 
   getPoolStats = () => {
+    // https://pool.conceal.network/api/pool/stats/pplns
     return this.fetch(`${this.apiURL}/pool/stats`)
       .then(res => Promise.resolve(res));
   };

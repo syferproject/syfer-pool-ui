@@ -1,7 +1,34 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
 import { AppContext } from '../components/ContextProvider';
 
+
+const localeDecimal = new Intl.NumberFormat(undefined, { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+export const averageHashRate = (data, timeWindow = 'day') => {
+  const filteredData = data?.filter(i => i.ts > Date.now() - (timeWindow === 'day' ? 86400000 : 3600000)).map(i => i.hs) || [];
+  return toHashRate(filteredData.reduce((a, b) => a + b, 0) / filteredData.length || 0);
+}
+
+export const CCXExplorerLink = props => {
+  const { state } = useContext(AppContext);
+  const { appSettings } = state;
+  const {
+    hash,
+    type = 'transaction',
+    shortHash = false,
+  } = props;
+
+  return (
+    <a
+      href={`${appSettings.explorerURL}/index.html?hash=${hash}#blockchain_${type}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {shortHash ? `${hash?.slice(0, 8)}...` : hash}
+    </a>
+  );
+};
 
 export const formattedStringAmount = ({
   amount,
@@ -23,7 +50,7 @@ export const formattedStringAmount = ({
 export const FormattedAmount = props => {
   const { state } = useContext(AppContext);
   const { appSettings } = state;
-  const { amount, currency = 'CCX', showCurrency = true, useSymbol = false, useDecimals = true } = props;
+  const { amount, currency = 'CCX', divide = false, showCurrency = true, useSymbol = false, useDecimals = true } = props;
 
   let minimumFractionDigits = 0;
   let maximumFractionDigits = 0;
@@ -50,7 +77,7 @@ export const FormattedAmount = props => {
   return (
     <>
       {formattedStringAmount({
-        amount,
+        amount: divide ? amount / Math.pow(10, appSettings.coinDecimals) : amount,
         currency,
         formatOptions,
         showCurrency,
@@ -60,22 +87,9 @@ export const FormattedAmount = props => {
   );
 };
 
-export const CCXExplorerLink = props => {
-  const { state } = useContext(AppContext);
-  const { appSettings } = state;
-  const {
-    hash,
-    type = 'transaction',
-    shortHash = false,
-  } = props;
-
-  return (
-    <a
-      href={`${appSettings.explorerURL}/index.html?hash=${hash}#blockchain_${type}`}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {shortHash ? `${hash?.slice(0, 8)}...` : hash}
-    </a>
-  );
+export const toHashRate = (nr, hr = 'H/s') => {
+  if (nr > 1e9) return `${localeDecimal.format(nr / 1e9)} G${hr}`;
+  if (nr > 1e6) return `${localeDecimal.format(nr / 1e6)} M${hr}`;
+  if (nr > 1e3) return `${localeDecimal.format(nr / 1e3)} K${hr}`;
+  return `${(localeDecimal.format(nr) || 0)} ${hr}`;
 };

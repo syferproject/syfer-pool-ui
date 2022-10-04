@@ -1,15 +1,67 @@
-import React from 'react';
+import { createContext } from 'react';
 import ApiHelper from '../helpers/ApiHelper';
-import { useMountEffect } from '../helpers/hooks';
+import { useLocalStorage, useMountEffect } from '../helpers/hooks';
 
 import useAppState from './useAppState';
 
 
-export const AppContext = React.createContext();
+export const AppContext = createContext();
 
 const AppContextProvider = props => {
   const [state, dispatch, updatedState] = useAppState();
+  const [storedMiners, setStoredMiners] = useLocalStorage('ccx_pool');
   const Api = new ApiHelper({ state });
+
+  const deleteMiner = address => {
+    const miners = {...storedMiners};
+    delete miners[address];
+    setStoredMiners(miners);
+    dispatch({ type: 'SET_MINERS', miners });
+    if (Object.keys(miners).length === 0) dispatch({ type: 'CLEAR_MINERS_INTERVALS' });
+  }
+
+  const getMinerData = address => {
+    Api.getMinerStats(address)
+      .then(stats => {
+        dispatch({ type: 'UPDATE_MINER', address, stats });
+      });
+    Api.getMinerIdentifiers(address)
+      .then(identifiers => {
+        dispatch({ type: 'UPDATE_MINER', address, identifiers });
+      });
+    Api.getMinerWorkers(address)
+      .then(workers => {
+        dispatch({ type: 'UPDATE_MINER', address, workers });
+      });
+    Api.getMinerChart(address)
+      .then(chartData => {
+        dispatch({ type: 'UPDATE_MINER', address, chartData });
+      })
+    Api.getMinerPayments(address)
+      .then(payments => {
+        dispatch({ type: 'UPDATE_MINER', address, payments });
+      })
+  }
+
+  const getMiners = () => {
+    Object.keys(storedMiners).map(address => getMinerData(address));
+  }
+
+  const setMiner = address => {
+    const miners = {
+      ...storedMiners,
+      [address]: {
+        chartData: {},
+        identifiers: [],
+        payments: [],
+        stats: {},
+        workers: {},
+      }
+    };
+    setStoredMiners(miners);
+    dispatch({ type: 'SET_MINERS', miners });
+    getMinerData(address);
+  }
 
   const getConfig = () => {
     Api.getConfig()
@@ -62,11 +114,12 @@ const AppContextProvider = props => {
   };
 
   const actions = {
-
+    deleteMiner,
+    setMiner,
   };
 
   const initApp = () => {
-    const { appSettings, userSettings } = state;
+    const { appSettings } = state;
 
     getConfig();
     getNetworkStats();
@@ -82,7 +135,12 @@ const AppContextProvider = props => {
       { fn: getPoolStats, time: appSettings.updateStatsInterval },
     );
 
-    dispatch({ type: 'SET_INTERVALS', intervals });
+    dispatch({ type: 'SET_POOL_INTERVALS', intervals });
+
+    if (Object.keys(storedMiners).length > 0) {
+      getMiners();
+      dispatch({ type: 'SET_MINERS_INTERVALS', intervals: [{ fn: getMiners, time: appSettings.updateMinersInterval }] });
+    }
   };
 
   const clearApp = () => {
