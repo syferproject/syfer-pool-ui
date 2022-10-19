@@ -1,4 +1,5 @@
-import { Fragment, useContext, useState } from 'react';
+import { Fragment, useContext } from 'react';
+import { useFormInput } from '../../helpers/hooks';
 import { FormattedAmount, toHashRate } from '../../helpers/utils';
 import { AppContext } from '../ContextProvider';
 
@@ -11,7 +12,7 @@ const MinerStats = () => {
   const { deleteMiner, setMiner } = actions;
   const { miners } = state;
 
-  const [minerAddress, setMinerAddress] = useState('');
+  const { value: minerAddress, reset: resetMinerAddress, bind: bindMinerAddress } = useFormInput('');
 
   return (
     <div>
@@ -20,15 +21,15 @@ const MinerStats = () => {
         onSubmit={e => {
           e.preventDefault();
           setMiner(minerAddress);
-          setMinerAddress('');
+          resetMinerAddress();
         }}
       >
         <label>
           Miner address:
           <input
+            {...bindMinerAddress}
             type="text"
-            value={minerAddress}
-            onChange={(e) => setMinerAddress(e.target.value)}
+            name="address"
             placeholder="Miner address"
             aria-label="miner-address"
           />
@@ -39,9 +40,9 @@ const MinerStats = () => {
         <Fragment key={address}>
           <div>{address} <button onClick={() => deleteMiner(address)}>Remove miner</button></div>
           <div>Hash rate: {toHashRate(miners[address].stats?.hash)}</div>
-          <div>Last hash: {new Date(miners[address].stats?.lastHash * 1000).toLocaleString()}</div>
-          <div>Total hashes: {miners[address].stats?.totalHashes?.toLocaleString()}</div>
-          <div>Valid shares: {miners[address].stats?.validShares?.toLocaleString()}</div>
+          <div>Last hash: {miners[address].stats?.lastHash ? new Date(miners[address].stats.lastHash * 1000).toLocaleString() : 'Never'}</div>
+          <div>Total hashes: {miners[address].stats?.totalHashes?.toLocaleString() || 0}</div>
+          <div>Valid shares: {miners[address].stats?.validShares?.toLocaleString() || 0}</div>
           <div>Invalid shares: {miners[address].stats?.invalidShares > 0 ?miners[address].stats?.invalidShares.toLocaleString() : 0}</div>
           <div>Amount paid: <FormattedAmount amount={miners[address].stats?.amtPaid} divide /></div>
           <div>Amount due: <FormattedAmount amount={miners[address].stats?.amtDue} divide /></div>
@@ -51,7 +52,6 @@ const MinerStats = () => {
           <MinerPayments address={address} miners={miners} />
         </Fragment>
       )}
-
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { useReducer, useRef } from 'react';
 import { constants as appSettings } from './constants';
 
 
-const initialState = () => ({
+const initialState = Auth => ({
   appSettings,
   minersIntervals: [],
   poolIntervals: [],
@@ -15,6 +15,12 @@ const initialState = () => ({
   poolStats: {},
 
   miners: {},
+
+  user: {
+    emailEnabled: 0,
+    loggedIn: () => Auth.loggedIn(),
+    payoutThreshold: 0,
+  },
 });
 
 let updatedState;
@@ -22,6 +28,16 @@ let updatedState;
 const reducer = (state, action) => {
   let result = {};
   switch (action.type) {
+    case 'UPDATE_USER':
+      result = {
+        ...state,
+        user: {
+          ...state.user,
+          emailEnabled: action?.emailEnabled,
+          payoutThreshold: action?.payoutThreshold,
+        }
+      };
+      break;
     case 'UPDATE_CONFIG':
       result = {
         ...state,

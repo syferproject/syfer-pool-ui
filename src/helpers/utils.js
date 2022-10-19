@@ -91,5 +91,5 @@ export const toHashRate = (nr, hr = 'H/s') => {
   if (nr > 1e9) return `${localeDecimal.format(nr / 1e9)} G${hr}`;
   if (nr > 1e6) return `${localeDecimal.format(nr / 1e6)} M${hr}`;
   if (nr > 1e3) return `${localeDecimal.format(nr / 1e3)} K${hr}`;
-  return `${(localeDecimal.format(nr) || 0)} ${hr}`;
+  return `${(localeDecimal.format(nr || 0))} ${hr}`;
 };

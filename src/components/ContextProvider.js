@@ -1,21 +1,25 @@
 import { createContext } from 'react';
 import ApiHelper from '../helpers/ApiHelper';
+import AuthHelper from '../helpers/AuthHelper';
 import { useLocalStorage, useMountEffect } from '../helpers/hooks';
 
 import useAppState from './useAppState';
 
 
 export const AppContext = createContext();
+const Auth = new AuthHelper();
 
 const AppContextProvider = props => {
-  const [state, dispatch, updatedState] = useAppState();
+  const [state, dispatch, updatedState] = useAppState(Auth);
   const [storedMiners, setStoredMiners] = useLocalStorage('ccx_pool');
-  const Api = new ApiHelper({ state });
+  const Api = new ApiHelper(Auth);
 
   const deleteMiner = address => {
-    const miners = {...storedMiners};
+    const updatedMiners = { ...storedMiners };
+    delete updatedMiners[address];
+    setStoredMiners(updatedMiners);
+    const miners = updatedState.current.miners;
     delete miners[address];
-    setStoredMiners(miners);
     dispatch({ type: 'SET_MINERS', miners });
     if (Object.keys(miners).length === 0) dispatch({ type: 'CLEAR_MINERS_INTERVALS' });
   }
@@ -44,23 +48,21 @@ const AppContextProvider = props => {
   }
 
   const getMiners = () => {
-    Object.keys(storedMiners).map(address => getMinerData(address));
+    Object.keys(JSON.parse(localStorage.getItem('ccx_pool'))).map(address => getMinerData(address));
   }
 
   const setMiner = address => {
-    const miners = {
+    setStoredMiners({
       ...storedMiners,
-      [address]: {
-        chartData: {},
-        identifiers: [],
-        payments: [],
-        stats: {},
-        workers: {},
-      }
+      [address]: {}
+    });
+    const miners = {
+      ...updatedState.current.miners,
+      [address]: {}
     };
-    setStoredMiners(miners);
     dispatch({ type: 'SET_MINERS', miners });
     getMinerData(address);
+    // handle interval if first miner
   }
 
   const getConfig = () => {
@@ -113,13 +115,80 @@ const AppContextProvider = props => {
       });
   };
 
+  // Authed
+
+  const login = (username, password, cb) => {
+    Auth.login(username, password)
+      .then(res => {
+        if (res.success) {
+          getUserSettings();
+        } else {
+          cb(res.msg);
+        }
+      })
+  };
+
+  const logout = () => {
+    Auth.logout();
+    dispatch({ type: 'UPDATE_USER' });
+  };
+
+  const getUserSettings = () => {
+    Api.getUserSettings()
+      .then(res => {
+        dispatch({
+          type: 'UPDATE_USER',
+          emailEnabled: res.msg.email_enabled,
+          payoutThreshold: res.msg.payout_threshold,
+        });
+      })
+  }
+
+  const changePassword = (password, cb) => {
+    Api.changePassword(password)
+      .then(res => {
+        cb(res.msg);
+      });
+  }
+
+  const changePayoutThreshold = (payoutThreshold, cb) => {
+    Api.changePayoutThreshold(payoutThreshold)
+      .then(res => {
+        dispatch({
+          type: 'UPDATE_USER',
+          emailEnabled: updatedState.current.user.emailEnabled,
+          payoutThreshold: Number(payoutThreshold * Math.pow(10, updatedState.current.appSettings.coinDecimals)),
+        });
+        cb(res.msg);
+      });
+  }
+
+  const toggleEmail = cb => {
+    Api.toggleEmail()
+      .then(res => {
+        dispatch({
+          type: 'UPDATE_USER',
+          emailEnabled: Number(!updatedState.current.user.emailEnabled),
+          payoutThreshold: updatedState.current.user.payoutThreshold,
+        });
+        cb(res.msg);
+      })
+  }
+
   const actions = {
+    changePassword,
+    changePayoutThreshold,
     deleteMiner,
+    login,
+    logout,
     setMiner,
+    toggleEmail,
   };
 
   const initApp = () => {
     const { appSettings } = state;
+
+    if (updatedState.current.user.loggedIn()) getUserSettings();
 
     getConfig();
     getNetworkStats();

@@ -20,3 +20,10 @@ export const useLocalStorage = (key, defaultValue) => {
 
   return [value, setValue];
 };
+
+export const useFormInput = init => {
+  const [value, setValue] = useState(init);
+  const onChange = e => setValue(e.target.value);
+  const reset = () => setValue('');
+  return { bind: { value, onChange }, reset, setValue, value };
+};

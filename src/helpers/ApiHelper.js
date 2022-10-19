@@ -1,7 +1,7 @@
 export default class ApiHelper {
-  constructor(options) {
-    this.apiURL = options.state.appSettings.apiURL;
-    // this.auth = options.Auth;
+  constructor(auth) {
+    this.apiURL = process.env.REACT_APP_API_ENDPOINT;
+    this.auth = auth;
   }
 
   qs = params => Object.keys(params).map(key => `${key}=${params[key]}`).join('&');
@@ -61,12 +61,37 @@ export default class ApiHelper {
       .then(res => Promise.resolve(res));
   };
 
+  // Auth
+
+  getUserSettings = () => {
+    return this.fetch(`${this.apiURL}/authed`)
+      .then(res => Promise.resolve(res));
+  };
+
+  changePassword = password => {
+    const body = JSON.stringify({ password });
+    return this.fetch(`${this.apiURL}/authed/changePassword`, { method: 'POST', body })
+      .then(res => Promise.resolve(res));
+  }
+
+  changePayoutThreshold = threshold => {
+    const body = JSON.stringify({ threshold });
+    return this.fetch(`${this.apiURL}/authed/changePayoutThreshold`, { method: 'POST', body })
+      .then(res => Promise.resolve(res));
+  };
+
+  toggleEmail = () => {
+    const body = JSON.stringify({});
+    return this.fetch(`${this.apiURL}/authed/toggleEmail`, { method: 'POST', body })
+      .then(res => Promise.resolve(res));
+  };
+
   fetch = (url, options) => {
     const headers = options?.headers || {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     };
-    // if (this.auth.loggedIn()) headers.token = this.auth.getToken();
+    if (this.auth.loggedIn()) headers['x-access-token'] = this.auth.getToken();
 
     return fetch(url, { headers, ...options })
       .then(this._checkStatus)
