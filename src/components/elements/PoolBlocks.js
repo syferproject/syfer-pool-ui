@@ -2,7 +2,8 @@ import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-quer
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { useContext, useMemo, useState } from 'react';
 import { BsCheck, BsChevronLeft, BsChevronRight, BsUnlockFill, BsX } from 'react-icons/bs';
-import { CCXExplorerLink, FormattedAmount, localePercentage } from '../../helpers/utils';
+import { CCXExplorerLink, FormattedAmount, TimeAgo } from '../../helpers/Strings';
+import { localePercentage } from '../../helpers/utils';
 
 import { AppContext } from '../ContextProvider';
 
@@ -33,14 +34,13 @@ const PoolBlocksData = () => {
     }),
     columnHelper.accessor('ts', {
       header: () => 'Time Found',
-      cell: info => new Date(info.getValue()).toLocaleString(),
+      cell: info => <TimeAgo time={info.getValue() / 1000} />,
     }),
     columnHelper.accessor('value', {
       header: () => 'Reward',
       cell: info => <FormattedAmount
         amount={info.getValue() / Math.pow(10, appSettings.coinDecimals)}
         minimumFractionDigits={0}
-        maximumFractionDigits={4}
         showCurrency={false}
       />,
     }),
@@ -57,7 +57,7 @@ const PoolBlocksData = () => {
       cell: info => {
         const luck = info.row.original.shares / info.getValue();
         const className = luck >= 1 ? 'text-red' : 'text-green';
-        return <span className={info.row.original.valid ? className : undefined}>{localePercentage.format(luck)}</span>
+        return <span className={info.row.original.valid ? className : undefined}>{localePercentage(0).format(luck)}</span>
       },
     }),
     columnHelper.accessor('unlocked', {

@@ -74,7 +74,10 @@ const reducer = (state, action) => {
     case 'UPDATE_POOL_BLOCKS':
       result = {
         ...state,
-        poolBlocks: action.poolBlocks,
+        poolBlocks: {
+          ...state.poolBlocks,
+          [action.poolType]: action.poolBlocks,
+        },
       };
       break;
     case 'UPDATE_POOL_MINERS_CHART':
@@ -86,7 +89,10 @@ const reducer = (state, action) => {
     case 'UPDATE_POOL_STATS':
       result = {
         ...state,
-        poolStats: action.poolStats,
+        poolStats: {
+          ...state.poolStats,
+          [action.poolType]: action.poolStats,
+        },
       };
       break;
     case 'CLEAR_MINERS_INTERVALS':

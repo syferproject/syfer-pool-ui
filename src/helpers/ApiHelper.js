@@ -9,7 +9,7 @@ export default class ApiHelper {
   getConfig = () => {
     return this.fetch(`${this.apiURL}/config`)
       .then(res => Promise.resolve(res));
-  };
+  }
 
   getMinerChart = address => {
     return this.fetch(`${this.apiURL}/miner/${address}/chart/hashrate/allWorkers`)
@@ -42,29 +42,29 @@ export default class ApiHelper {
   getNetworkStats = () => {
     return this.fetch(`${this.apiURL}/network/stats`)
       .then(res => Promise.resolve(res));
-  };
+  }
 
-  getPoolBlocks = (page, limit) => {
-    return this.fetch(`${this.apiURL}/pool/blocks?${this.qs({ limit, page })}`)
+  getPoolBlocks = (page, limit, poolType = undefined) => {
+    return this.fetch(`${this.apiURL}/pool/blocks${poolType ? `/${poolType}` : ''}?${this.qs({ limit, page })}`)
       .then(res => Promise.resolve(res));
-  };
+  }
 
   getPoolMinersChart = () => {
     return this.fetch(`${this.apiURL}/pool/chart/miners`)
       .then(res => Promise.resolve(res));
-  };
+  }
 
-  getPoolStats = () => {
-    return this.fetch(`${this.apiURL}/pool/stats`)
+  getPoolStats = (poolType = undefined) => {
+    return this.fetch(`${this.apiURL}/pool/stats${poolType ? `/${poolType}` : ''}`)
       .then(res => Promise.resolve(res));
-  };
+  }
 
   // Auth
 
   getUserSettings = () => {
     return this.fetch(`${this.apiURL}/authed`)
       .then(res => Promise.resolve(res));
-  };
+  }
 
   changePassword = password => {
     const body = JSON.stringify({ password });
@@ -76,13 +76,13 @@ export default class ApiHelper {
     const body = JSON.stringify({ threshold });
     return this.fetch(`${this.apiURL}/authed/changePayoutThreshold`, { method: 'POST', body })
       .then(res => Promise.resolve(res));
-  };
+  }
 
   toggleEmail = () => {
     const body = JSON.stringify({});
     return this.fetch(`${this.apiURL}/authed/toggleEmail`, { method: 'POST', body })
       .then(res => Promise.resolve(res));
-  };
+  }
 
   fetch = (url, options) => {
     const headers = options?.headers || {
@@ -94,7 +94,7 @@ export default class ApiHelper {
     return fetch(url, { headers, ...options })
       .then(this._checkStatus)
       .then(response => response.json());
-  };
+  }
 
   _checkStatus = response => {
     if (response.status >= 200 && response.status < 300) {
@@ -104,5 +104,5 @@ export default class ApiHelper {
       error.response = response;
       throw error;
     }
-  };
+  }
 }

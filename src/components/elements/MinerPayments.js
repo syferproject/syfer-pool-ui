@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { CCXExplorerLink, FormattedAmount } from '../../helpers/utils';
+import { CCXExplorerLink, FormattedAmount, TimeAgo } from '../../helpers/Strings';
 
 
 const MinerPayments = props => {
@@ -10,7 +10,8 @@ const MinerPayments = props => {
       <h4>Payments</h4>
       {miners[address].payments?.map(payment =>
         <Fragment key={payment.ts}>
-          <div>{new Date(payment.ts * 1000).toLocaleString()} <FormattedAmount amount={payment.amount} divide /> <CCXExplorerLink hash={payment.txnHash} shortHash /> {payment.mixin} {payment.pt}</div>
+          <div>
+            <TimeAgo time={payment.ts} /> <FormattedAmount amount={payment.amount} minimumFractionDigits={0} divide /> <CCXExplorerLink hash={payment.txnHash} shortHash /> {payment.mixin} {payment.pt}</div>
         </Fragment>
       )}
     </div>

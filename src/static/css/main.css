@@ -11,6 +11,15 @@ body {
   display: none;
 }
 
+.truncate {
+  width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
 .text-green {
   color: rgb(41, 140, 8);
 }

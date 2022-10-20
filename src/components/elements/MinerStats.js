@@ -1,6 +1,6 @@
 import { Fragment, useContext } from 'react';
 import { useFormInput } from '../../helpers/hooks';
-import { FormattedAmount, toHashRate } from '../../helpers/utils';
+import { FormattedAmount, HashRate, TimeAgo } from '../../helpers/Strings';
 import { AppContext } from '../ContextProvider';
 
 import MinerPayments from './MinerPayments';
@@ -36,22 +36,25 @@ const MinerStats = () => {
         </label>
         <input type="submit" value="Submit"></input>
       </form>
-      {Object.keys(miners).map(address =>
-        <Fragment key={address}>
-          <div>{address} <button onClick={() => deleteMiner(address)}>Remove miner</button></div>
-          <div>Hash rate: {toHashRate(miners[address].stats?.hash)}</div>
-          <div>Last hash: {miners[address].stats?.lastHash ? new Date(miners[address].stats.lastHash * 1000).toLocaleString() : 'Never'}</div>
-          <div>Total hashes: {miners[address].stats?.totalHashes?.toLocaleString() || 0}</div>
-          <div>Valid shares: {miners[address].stats?.validShares?.toLocaleString() || 0}</div>
-          <div>Invalid shares: {miners[address].stats?.invalidShares > 0 ?miners[address].stats?.invalidShares.toLocaleString() : 0}</div>
-          <div>Amount paid: <FormattedAmount amount={miners[address].stats?.amtPaid} divide /></div>
-          <div>Amount due: <FormattedAmount amount={miners[address].stats?.amtDue} divide /></div>
-          <div>Total payments: {miners[address].stats?.txnCount?.toLocaleString()}</div>
+      {Object.keys(miners).map(address => {
+        const { stats } = miners[address];
+        return (
+          <Fragment key={address}>
+            <div>{address} <button onClick={() => deleteMiner(address)}>Remove miner</button></div>
+            <div>Hash rate: <HashRate hr={stats.hash || 0} /></div>
+            <div>Last hash: {stats.lastHash ? <TimeAgo time={stats.lastHash} /> : 'Never'}</div>
+            <div>Total hashes: {stats.totalHashes?.toLocaleString() || 0}</div>
+            <div>Valid shares: {stats.validShares?.toLocaleString() || 0}</div>
+            <div>Invalid shares: {stats.invalidShares > 0 ? stats.invalidShares?.toLocaleString() : 0}</div>
+            <div>Amount paid: <FormattedAmount amount={stats.amtPaid} divide minimumFractionDigits={0} /></div>
+            <div>Amount due: <FormattedAmount amount={stats.amtDue} divide /></div>
+            <div>Total payments: {stats.txnCount?.toLocaleString()}</div>
 
-          <WorkerStats address={address} miners={miners} />
-          <MinerPayments address={address} miners={miners} />
-        </Fragment>
-      )}
+            <WorkerStats address={address} miners={miners} />
+            <MinerPayments address={address} miners={miners} />
+          </Fragment>
+        )
+      })}
     </div>
   );
 }

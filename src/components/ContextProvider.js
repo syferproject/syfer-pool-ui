@@ -2,7 +2,6 @@ import { createContext } from 'react';
 import ApiHelper from '../helpers/ApiHelper';
 import AuthHelper from '../helpers/AuthHelper';
 import { useLocalStorage, useMountEffect } from '../helpers/hooks';
-import poolStats from './elements/PoolStats';
 
 import useAppState from './useAppState';
 
@@ -74,7 +73,7 @@ const AppContextProvider = props => {
       .catch(() => {
         console.error('Error getting pool config.')
       });
-  };
+  }
 
   const getNetworkStats = () => {
     Api.getNetworkStats()
@@ -84,14 +83,15 @@ const AppContextProvider = props => {
       .catch(() => {
         console.error('Error getting network stats.')
       });
-  };
+  }
 
   const getPoolBlocks = async (page = 0, limit = 10) => {
-    if (!updatedState.current.poolStats.pool_statistics?.totalBlocksFound) await getPoolStats();
+    if (!updatedState.current.poolStats.global?.pool_statistics?.totalBlocksFound) await getPoolStats();
     const rows = await Api.getPoolBlocks(page, limit);
+    dispatch({ type: 'UPDATE_POOL_BLOCKS', poolBlocks: rows, poolType: 'global' });
     return {
       rows,
-      pageCount: Math.ceil(updatedState.current.poolStats.pool_statistics?.totalBlocksFound / limit),
+      pageCount: Math.ceil(updatedState.current.poolStats.global.pool_statistics.totalBlocksFound / limit),
     }
   }
 
@@ -103,17 +103,27 @@ const AppContextProvider = props => {
       .catch(() => {
         console.error('Error getting pool miners chart.')
       });
-  };
+  }
 
   const getPoolStats = async () => {
     await Api.getPoolStats()
       .then(poolStats => {
-        dispatch({ type: 'UPDATE_POOL_STATS', poolStats });
+        dispatch({ type: 'UPDATE_POOL_STATS', poolStats, poolType: 'global' });
+        poolStats.pool_list.forEach(poolType => {
+          Api.getPoolStats(poolType)
+            .then(poolStats => {
+              dispatch({ type: 'UPDATE_POOL_STATS', poolStats, poolType });
+            });
+          Api.getPoolBlocks(0, 1, poolType)
+            .then(poolBlocks => {
+              dispatch({ type: 'UPDATE_POOL_BLOCKS', poolBlocks, poolType });
+            });
+        })
       })
       .catch(() => {
         console.error('Error getting pool stats.')
       });
-  };
+  }
 
   // Authed
 
@@ -126,12 +136,12 @@ const AppContextProvider = props => {
           cb(res.msg);
         }
       })
-  };
+  }
 
   const logout = () => {
     Auth.logout();
     dispatch({ type: 'UPDATE_USER' });
-  };
+  }
 
   const getUserSettings = () => {
     Api.getUserSettings()
@@ -184,7 +194,7 @@ const AppContextProvider = props => {
     logout,
     setMiner,
     toggleEmail,
-  };
+  }
 
   const initApp = () => {
     const { appSettings } = state;
@@ -209,16 +219,16 @@ const AppContextProvider = props => {
       getMiners();
       dispatch({ type: 'SET_MINERS_INTERVALS', intervals: [{ fn: getMiners, time: appSettings.updateMinersInterval }] });
     }
-  };
+  }
 
   const clearApp = () => {
     dispatch({ type: 'CLEAR_APP' });
-  };
+  }
 
   useMountEffect(() => {
     initApp();
     return () => clearApp();
-  });
+  })
 
   return (
     <AppContext.Provider value={{ state, actions }}>

@@ -5,6 +5,7 @@ export const constants = {
   updateMinersInterval: 15,
   updateStatsInterval: 30,
   coinDecimals: 6,
+  difficultyTarget: 120,
   minimumPasswordLength: 8,
   maximumPasswordLength: 64,
   minimumPayoutThreshold: 0,
