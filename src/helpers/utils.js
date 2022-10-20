@@ -3,7 +3,8 @@ import { useContext } from 'react';
 import { AppContext } from '../components/ContextProvider';
 
 
-const localeDecimal = new Intl.NumberFormat(undefined, { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+export const localeDecimal = new Intl.NumberFormat(undefined, { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+export const localePercentage = new Intl.NumberFormat(undefined, { style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
 export const averageHashRate = (data, timeWindow = 'day') => {
   const filteredData = data?.filter(i => i.ts > Date.now() - (timeWindow === 'day' ? 86400000 : 3600000)).map(i => i.hs) || [];
@@ -50,10 +51,16 @@ export const formattedStringAmount = ({
 export const FormattedAmount = props => {
   const { state } = useContext(AppContext);
   const { appSettings } = state;
-  const { amount, currency = 'CCX', divide = false, showCurrency = true, useSymbol = false, useDecimals = true } = props;
-
-  let minimumFractionDigits = 0;
-  let maximumFractionDigits = 0;
+  let {
+    amount,
+    currency = 'CCX',
+    divide = false,
+    showCurrency = true,
+    useSymbol = false,
+    useDecimals = true,
+    maximumFractionDigits = appSettings.coinDecimals,
+    minimumFractionDigits = appSettings.coinDecimals,
+  } = props;
 
   if (useDecimals) {
     switch (currency) {
@@ -66,8 +73,6 @@ export const FormattedAmount = props => {
         maximumFractionDigits = 2;
         break;
       default:
-        minimumFractionDigits = appSettings.coinDecimals;
-        maximumFractionDigits = appSettings.coinDecimals;
         break;
     }
   }

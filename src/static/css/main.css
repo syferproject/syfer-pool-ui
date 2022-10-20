@@ -10,3 +10,39 @@ body {
 .hidden {
   display: none;
 }
+
+.text-green {
+  color: rgb(41, 140, 8);
+}
+
+.text-red {
+  color: rgb(206, 49, 19);
+}
+
+.loading-bar-container {
+  position: absolute;
+  height: 4px;
+  width: 50px;
+  overflow: hidden;
+  border-radius: 2px;
+  background-color: rgb(235, 235, 235);
+}
+
+.loading-bar {
+  position: absolute;
+  height: 100%;
+  width: 50%;
+  left: -50%;
+  border-radius: 2px;
+  background-color: rgb(175, 175, 175);
+  animation: loading 1s ease-in 0.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    transform:translateX(0)
+  }
+  to {
+    transform:translateX(400%)
+  }
+}

@@ -44,9 +44,8 @@ export default class ApiHelper {
       .then(res => Promise.resolve(res));
   };
 
-  getPoolBlocks = () => {
-    // https://pool.conceal.network/api/pool/blocks/pplns
-    return this.fetch(`${this.apiURL}/pool/blocks`)
+  getPoolBlocks = (page, limit) => {
+    return this.fetch(`${this.apiURL}/pool/blocks?${this.qs({ limit, page })}`)
       .then(res => Promise.resolve(res));
   };
 
@@ -56,7 +55,6 @@ export default class ApiHelper {
   };
 
   getPoolStats = () => {
-    // https://pool.conceal.network/api/pool/stats/pplns
     return this.fetch(`${this.apiURL}/pool/stats`)
       .then(res => Promise.resolve(res));
   };

@@ -2,6 +2,7 @@ import { createContext } from 'react';
 import ApiHelper from '../helpers/ApiHelper';
 import AuthHelper from '../helpers/AuthHelper';
 import { useLocalStorage, useMountEffect } from '../helpers/hooks';
+import poolStats from './elements/PoolStats';
 
 import useAppState from './useAppState';
 
@@ -85,15 +86,14 @@ const AppContextProvider = props => {
       });
   };
 
-  const getPoolBlocks = () => {
-    Api.getPoolBlocks()
-      .then(poolBlocks => {
-        dispatch({ type: 'UPDATE_POOL_BLOCKS', poolBlocks });
-      })
-      .catch(() => {
-        console.error('Error getting pool blocks.')
-      });
-  };
+  const getPoolBlocks = async (page = 0, limit = 10) => {
+    if (!updatedState.current.poolStats.pool_statistics?.totalBlocksFound) await getPoolStats();
+    const rows = await Api.getPoolBlocks(page, limit);
+    return {
+      rows,
+      pageCount: Math.ceil(updatedState.current.poolStats.pool_statistics?.totalBlocksFound / limit),
+    }
+  }
 
   const getPoolMinersChart = () => {
     Api.getPoolMinersChart()
@@ -105,8 +105,8 @@ const AppContextProvider = props => {
       });
   };
 
-  const getPoolStats = () => {
-    Api.getPoolStats()
+  const getPoolStats = async () => {
+    await Api.getPoolStats()
       .then(poolStats => {
         dispatch({ type: 'UPDATE_POOL_STATS', poolStats });
       })
@@ -179,6 +179,7 @@ const AppContextProvider = props => {
     changePassword,
     changePayoutThreshold,
     deleteMiner,
+    getPoolBlocks,
     login,
     logout,
     setMiner,
@@ -192,14 +193,12 @@ const AppContextProvider = props => {
 
     getConfig();
     getNetworkStats();
-    getPoolStats();
-    getPoolBlocks();
     getPoolMinersChart();
 
     const intervals = [];
     intervals.push(
       { fn: getNetworkStats, time: appSettings.updateStatsInterval },
-      { fn: getPoolBlocks, time: appSettings.updateStatsInterval },
+      { fn: getPoolBlocks, time: appSettings.updateBlocksInterval },
       { fn: getPoolMinersChart, time: appSettings.updateStatsInterval },
       { fn: getPoolStats, time: appSettings.updateStatsInterval },
     );
