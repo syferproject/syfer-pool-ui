@@ -21,11 +21,8 @@ export default class ApiHelper {
       .then(res => Promise.resolve(res));
   }
 
-  getMinerPayments = (address, page, limit) => {
-    const params = {};
-    if (limit) params.limit = limit;
-    if (page) params.page = page;
-    return this.fetch(`${this.apiURL}/miner/${address}/payments?${this.qs(params)}`)
+  getMinerPayments = (address, page = 0, limit = 10) => {
+    return this.fetch(`${this.apiURL}/miner/${address}/payments?${this.qs({ limit, page })}`)
       .then(res => Promise.resolve(res));
   }
 

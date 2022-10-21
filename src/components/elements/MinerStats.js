@@ -2,7 +2,6 @@ import { Fragment, useContext } from 'react';
 import { useFormInput } from '../../helpers/hooks';
 import { FormattedAmount, HashRate, TimeAgo } from '../../helpers/Strings';
 import { AppContext } from '../ContextProvider';
-
 import MinerPayments from './MinerPayments';
 import WorkerStats from './WorkerStats';
 
@@ -41,17 +40,17 @@ const MinerStats = () => {
         return (
           <Fragment key={address}>
             <div>{address} <button onClick={() => deleteMiner(address)}>Remove miner</button></div>
-            <div>Hash rate: <HashRate hr={stats.hash || 0} /></div>
-            <div>Last hash: {stats.lastHash ? <TimeAgo time={stats.lastHash} /> : 'Never'}</div>
-            <div>Total hashes: {stats.totalHashes?.toLocaleString() || 0}</div>
-            <div>Valid shares: {stats.validShares?.toLocaleString() || 0}</div>
-            <div>Invalid shares: {stats.invalidShares > 0 ? stats.invalidShares?.toLocaleString() : 0}</div>
-            <div>Amount paid: <FormattedAmount amount={stats.amtPaid} divide minimumFractionDigits={0} /></div>
-            <div>Amount due: <FormattedAmount amount={stats.amtDue} divide /></div>
-            <div>Total payments: {stats.txnCount?.toLocaleString()}</div>
+            <div>Hash rate: <HashRate hr={stats?.hash || 0} /></div>
+            <div>Last hash: {stats?.lastHash ? <TimeAgo time={stats.lastHash} /> : 'Never'}</div>
+            <div>Total hashes: {stats?.totalHashes?.toLocaleString() || 0}</div>
+            <div>Valid shares: {stats?.validShares?.toLocaleString() || 0}</div>
+            <div>Invalid shares: {stats?.invalidShares > 0 ? stats.invalidShares.toLocaleString() : 0}</div>
+            <div>Amount paid: <FormattedAmount amount={stats?.amtPaid} divide minimumFractionDigits={0} /></div>
+            <div>Amount due: <FormattedAmount amount={stats?.amtDue} divide /></div>
+            <div>Total payments: {stats?.txnCount.toLocaleString()}</div>
 
             <WorkerStats address={address} miners={miners} />
-            <MinerPayments address={address} miners={miners} />
+            <MinerPayments address={address} />
           </Fragment>
         )
       })}

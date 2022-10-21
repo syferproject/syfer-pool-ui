@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import { FormattedAmount } from '../../helpers/Strings';
 import { localePercentage } from '../../helpers/utils';
-
 import { AppContext } from '../ContextProvider';
 
 

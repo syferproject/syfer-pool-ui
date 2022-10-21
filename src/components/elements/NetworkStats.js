@@ -1,6 +1,5 @@
 import { useContext } from 'react';
 import { CCXExplorerLink, FormattedAmount, HashRate, TimeAgo } from '../../helpers/Strings';
-
 import { AppContext } from '../ContextProvider';
 
 

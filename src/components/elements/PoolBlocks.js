@@ -4,8 +4,8 @@ import { useContext, useMemo, useState } from 'react';
 import { BsCheck, BsChevronLeft, BsChevronRight, BsUnlockFill, BsX } from 'react-icons/bs';
 import { CCXExplorerLink, FormattedAmount, TimeAgo } from '../../helpers/Strings';
 import { localePercentage } from '../../helpers/utils';
-
 import { AppContext } from '../ContextProvider';
+
 
 const columnHelper = createColumnHelper();
 const queryClient = new QueryClient()
@@ -98,7 +98,6 @@ const PoolBlocksData = () => {
         <BsChevronLeft />
       </button>
       <button
-        className="border rounded p-1"
         onClick={() => table.nextPage()}
         disabled={!table.getCanNextPage()}
       >
@@ -153,7 +152,7 @@ const PoolBlocksData = () => {
   );
 }
 
-function PoolBlocks () {
+const PoolBlocks = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <PoolBlocksData />

@@ -2,7 +2,6 @@ import { createContext } from 'react';
 import ApiHelper from '../helpers/ApiHelper';
 import AuthHelper from '../helpers/AuthHelper';
 import { useLocalStorage, useMountEffect } from '../helpers/hooks';
-
 import useAppState from './useAppState';
 
 
@@ -24,8 +23,8 @@ const AppContextProvider = props => {
     if (Object.keys(miners).length === 0) dispatch({ type: 'CLEAR_MINERS_INTERVALS' });
   }
 
-  const getMinerData = address => {
-    Api.getMinerStats(address)
+  const getMinerData = async address => {
+    await Api.getMinerStats(address)
       .then(stats => {
         dispatch({ type: 'UPDATE_MINER', address, stats });
       });
@@ -41,14 +40,23 @@ const AppContextProvider = props => {
       .then(chartData => {
         dispatch({ type: 'UPDATE_MINER', address, chartData });
       })
-    Api.getMinerPayments(address)
-      .then(payments => {
-        dispatch({ type: 'UPDATE_MINER', address, payments });
-      })
+  }
+
+  const getMinerPayments = async (address, page = 0, limit = 10) => {
+    if (!updatedState.current.miners[address]?.stats?.txnCount) await getMinerData(address);
+    const rows = await Api.getMinerPayments(address, page, limit);
+    dispatch({ type: 'UPDATE_MINER', address, payments: rows });
+    return {
+      rows,
+      pageCount: Math.ceil(updatedState.current.miners[address].stats.txnCount / limit),
+    }
   }
 
   const getMiners = () => {
-    Object.keys(JSON.parse(localStorage.getItem('ccx_pool'))).map(address => getMinerData(address));
+    Object.keys(JSON.parse(localStorage.getItem('ccx_pool')))
+      .forEach(address => {
+        getMinerPayments(address);
+      });
   }
 
   const setMiner = address => {
@@ -61,7 +69,7 @@ const AppContextProvider = props => {
       [address]: {}
     };
     dispatch({ type: 'SET_MINERS', miners });
-    getMinerData(address);
+    getMinerPayments(address);
     // handle interval if first miner
   }
 
@@ -189,6 +197,7 @@ const AppContextProvider = props => {
     changePassword,
     changePayoutThreshold,
     deleteMiner,
+    getMinerPayments,
     getPoolBlocks,
     login,
     logout,
