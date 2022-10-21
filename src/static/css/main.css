@@ -7,6 +7,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.chart-container {
+  width: 900px;
+  height: 300px;
+}
+
 .hidden {
   display: none;
 }

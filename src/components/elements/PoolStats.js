@@ -10,11 +10,12 @@ import {
   TimeAgo,
 } from '../../helpers/Strings';
 import { AppContext } from '../ContextProvider';
+import PoolCharts from './PoolCharts';
 
 
 const PoolStats = () => {
   const { state } = useContext(AppContext);
-  const { networkStats, poolBlocks, poolStats } = state;
+  const { networkStats, poolBlocks, poolHashRate, poolStats } = state;
   const { difficulty } = networkStats;
   const { global } = poolStats;
   const { pool_statistics: stats } = global || {};
@@ -55,6 +56,8 @@ const PoolStats = () => {
           </Fragment>
         )
       })}
+
+      {poolHashRate.find(i => i.label === 'pplns')?.data.length > 0 && <PoolCharts />}
     </div>
   );
 }

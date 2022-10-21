@@ -11,6 +11,7 @@ const initialState = Auth => ({
   payments: [],
   poolBlocks: {},
   poolConfig: {},
+  poolHashRate: [],
   poolMinersChart: [],
   poolStats: {},
 
@@ -62,11 +63,12 @@ const reducer = (state, action) => {
         miners: {
           ...state.miners,
           [action.address]: {
-            chartData: { ...state.miners[action.address]?.chartData, ...action?.chartData },
-            identifiers: action?.identifiers || state.miners[action.address]?.identifiers,
-            payments: action?.payments || state.miners[action.address]?.payments,
-            stats: { ...state.miners[action.address]?.stats, ...action?.stats },
-            workers: { ...state.miners[action.address]?.workers, ...action?.workers },
+            ...state.miners[action.address],
+            chartData: action.chartData || state.miners[action.address]?.chartData,
+            identifiers: action.identifiers || state.miners[action.address]?.identifiers,
+            payments: action.payments || state.miners[action.address]?.payments,
+            stats: action.stats || state.miners[action.address]?.stats,
+            workers: action.workers || state.miners[action.address]?.workers,
           },
         },
       };
@@ -84,6 +86,15 @@ const reducer = (state, action) => {
           ...state.poolBlocks,
           [action.poolType]: action.poolBlocks,
         },
+      };
+      break;
+    case 'UPDATE_POOL_HASHRATE':
+      result = {
+        ...state,
+        poolHashRate: [
+          { label: 'pplns', data: action.poolType === 'pplns' ? action.poolHashRate.slice(0, -59000) : state.poolHashRate.find(i => i.label === 'pplns')?.data || [] },
+          { label: 'solo', data: action.poolType === 'solo' ? action.poolHashRate.slice(0, -59000) : state.poolHashRate.find(i => i.label === 'solo')?.data || [] },
+        ],
       };
       break;
     case 'UPDATE_POOL_MINERS_CHART':

@@ -49,7 +49,7 @@ const MinerStats = () => {
             <div>Amount due: <FormattedAmount amount={stats?.amtDue} divide /></div>
             <div>Total payments: {stats?.txnCount?.toLocaleString()}</div>
 
-            <WorkerStats address={address} miners={miners} />
+            <WorkerStats address={address} />
             <MinerPayments address={address} />
           </Fragment>
         )

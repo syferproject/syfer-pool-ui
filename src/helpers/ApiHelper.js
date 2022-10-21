@@ -51,6 +51,11 @@ export default class ApiHelper {
       .then(res => Promise.resolve(res));
   }
 
+  getPoolHashRateChart = poolType => {
+    return this.fetch(`${this.apiURL}/pool/chart/hashrate/${poolType}`)
+      .then(res => Promise.resolve(res));
+  }
+
   getPoolMinersChart = () => {
     return this.fetch(`${this.apiURL}/pool/chart/miners`)
       .then(res => Promise.resolve(res));

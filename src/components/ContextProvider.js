@@ -37,7 +37,10 @@ const AppContextProvider = props => {
         dispatch({ type: 'UPDATE_MINER', address, workers });
       });
     Api.getMinerChart(address)
-      .then(chartData => {
+      .then(res => {
+        const chartData = Object.keys(res)
+          .map(label => ({ label, data: res[label] }))
+          .sort((a, b) => a.label.localeCompare(b.label));
         dispatch({ type: 'UPDATE_MINER', address, chartData });
       })
   }
@@ -134,6 +137,10 @@ const AppContextProvider = props => {
           Api.getPoolBlocks(0, 1, poolType)
             .then(poolBlocks => {
               dispatch({ type: 'UPDATE_POOL_BLOCKS', poolBlocks, poolType });
+            });
+          Api.getPoolHashRateChart(poolType)
+            .then(poolHashRate => {
+              dispatch({ type: 'UPDATE_POOL_HASHRATE', poolHashRate, poolType });
             });
         })
       })
