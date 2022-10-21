@@ -58,7 +58,6 @@ const AppContextProvider = props => {
     Object.keys(JSON.parse(localStorage.getItem('ccx_pool')))
       .forEach(address => {
         getMinerData(address);
-        getMinerPayments(address);
       });
   }
 
@@ -73,7 +72,6 @@ const AppContextProvider = props => {
     };
     dispatch({ type: 'SET_MINERS', miners });
     getMinerData(address);
-    getMinerPayments(address);
     // handle interval if first miner
   }
 
@@ -235,10 +233,8 @@ const AppContextProvider = props => {
     const intervals = [];
     intervals.push(
       { fn: getNetworkStats, time: appSettings.updateStatsInterval },
-      { fn: getPoolBlocks, time: appSettings.updateBlocksInterval },
       { fn: getPoolMinersChart, time: appSettings.updateStatsInterval },
       { fn: getPoolStats, time: appSettings.updateStatsInterval },
-      { fn: getPayments, time: appSettings.updateStatsInterval },
     );
 
     dispatch({ type: 'SET_POOL_INTERVALS', intervals });

@@ -12,7 +12,7 @@ const queryClient = new QueryClient()
 
 const PaymentsData = () => {
   const { actions, state } = useContext(AppContext);
-  const { poolStats } = state;
+  const { appSettings, poolStats } = state;
 
   const defaultData = useMemo(() => [], [])
   const [{ pageIndex, pageSize }, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
@@ -26,6 +26,8 @@ const PaymentsData = () => {
     {
       enabled: Boolean(poolStats.global?.pool_statistics?.totalPayments),
       keepPreviousData: true,
+      refetchInterval: appSettings.updateStatsInterval * 1000,
+      refetchIntervalInBackground: true,
       refetchOnWindowFocus: false,
     }
   );

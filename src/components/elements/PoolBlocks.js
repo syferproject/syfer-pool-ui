@@ -13,7 +13,7 @@ const queryClient = new QueryClient()
 
 const PoolBlocksData = () => {
   const { actions, state } = useContext(AppContext);
-  const { networkStats, poolConfig, poolStats } = state;
+  const { appSettings, networkStats, poolConfig, poolStats } = state;
 
   const defaultData = useMemo(() => [], [])
   const [{ pageIndex, pageSize }, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
@@ -27,6 +27,8 @@ const PoolBlocksData = () => {
     {
       enabled: Boolean(poolStats.global?.pool_statistics?.totalBlocksFound),
       keepPreviousData: true,
+      refetchInterval: appSettings.updateBlocksInterval * 1000,
+      refetchIntervalInBackground: true,
       refetchOnWindowFocus: false,
     }
   );

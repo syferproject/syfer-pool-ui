@@ -13,7 +13,7 @@ const queryClient = new QueryClient()
 const MinerPaymentsData = props => {
   const { address } = props;
   const { actions, state } = useContext(AppContext);
-  const { miners } = state;
+  const { appSettings, miners } = state;
 
   const defaultData = useMemo(() => [], [])
   const [{ pageIndex, pageSize }, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
@@ -27,6 +27,8 @@ const MinerPaymentsData = props => {
     {
       enabled: Boolean(miners[address]?.stats?.txnCount),
       keepPreviousData: true,
+      refetchInterval: appSettings.updateStatsInterval * 1000,
+      refetchIntervalInBackground: true,
       refetchOnWindowFocus: false,
     }
   );
