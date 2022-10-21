@@ -1,9 +1,8 @@
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { useContext, useMemo, useState } from 'react';
-import { BsCheck, BsChevronLeft, BsChevronRight, BsUnlockFill, BsX } from 'react-icons/bs';
+import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 import { CCXExplorerLink, FormattedAmount, TimeAgo } from '../../helpers/Strings';
-import { localePercentage } from '../../helpers/utils';
 import { AppContext } from '../ContextProvider';
 
 
@@ -11,9 +10,8 @@ const columnHelper = createColumnHelper();
 const queryClient = new QueryClient()
 
 
-const PoolBlocksData = () => {
-  const { actions, state } = useContext(AppContext);
-  const { networkStats, poolConfig } = state;
+const PaymentsData = () => {
+  const { actions } = useContext(AppContext);
 
   const defaultData = useMemo(() => [], [])
   const [{ pageIndex, pageSize }, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
@@ -23,54 +21,42 @@ const PoolBlocksData = () => {
 
   const dataQuery = useQuery(
     ['data', fetchDataOptions],
-    () => actions.getPoolBlocks(pageIndex, pageSize),
+    () => actions.getPayments(pageIndex, pageSize),
     { keepPreviousData: true }
   );
 
   const columns = [
-    columnHelper.accessor('valid', {
-      header: () => 'Valid',
-      cell: info => info.getValue() ? <BsCheck className="text-green" /> : <BsX className="text-red" />,
-    }),
     columnHelper.accessor('ts', {
-      header: () => 'Time Found',
+      header: () => 'Time Sent',
       cell: info => <TimeAgo time={info.getValue() / 1000} />,
     }),
+    columnHelper.accessor('hash', {
+      header: () => 'Transaction Hash',
+      cell: info => <CCXExplorerLink hash={info.getValue()} shortHash />,
+    }),
     columnHelper.accessor('value', {
-      header: () => 'Reward',
+      header: () => 'Amount',
       cell: info => <FormattedAmount
         amount={info.getValue()}
         divide
-        minimumFractionDigits={0}
-        showCurrency={false}
+        minimumFractionDigits={2}
       />,
     }),
-    columnHelper.accessor('height', {
-      header: () => 'Height',
-      cell: info => info.getValue().toLocaleString(),
+    columnHelper.accessor('fee', {
+      header: () => 'Fee',
+      cell: info => <FormattedAmount
+        amount={info.getValue()}
+        divide
+        minimumFractionDigits={4}
+      />,
     }),
-    columnHelper.accessor('hash', {
-      header: () => 'Hash',
-      cell: info => <CCXExplorerLink hash={info.getValue()} type="block" shortHash />,
+    columnHelper.accessor('mixins', {
+      header: () => 'Mixin',
+      cell: info => info.getValue(),
     }),
-    columnHelper.accessor('diff', {
-      header: () => 'Effort',
-      cell: info => {
-        const luck = info.row.original.shares / info.getValue();
-        const className = luck >= 1 ? 'text-red' : 'text-green';
-        return <span className={info.row.original.valid ? className : undefined}>{localePercentage(0).format(luck)}</span>
-      },
-    }),
-    columnHelper.accessor('unlocked', {
-      header: () => 'Maturity',
-      cell: info => {
-        const maturity = poolConfig.maturity_depth - (networkStats.height - info.row.original.height);
-        return maturity < 0
-          ? <BsUnlockFill />
-          : maturity === 0
-            ? <div className="loading-bar-container"><div className="loading-bar" /></div>
-            : maturity
-      },
+    columnHelper.accessor('payees', {
+      header: () => 'Payees',
+      cell: info => info.getValue(),
     }),
     columnHelper.accessor('pool_type', {
       header: () => 'Pool',
@@ -90,7 +76,7 @@ const PoolBlocksData = () => {
 
   return (
     <div>
-      <h3>Pool Blocks</h3>
+      <h3>Payments</h3>
 
       <button
         onClick={() => table.previousPage()}
@@ -153,12 +139,12 @@ const PoolBlocksData = () => {
   );
 }
 
-const PoolBlocks = () => {
+const Payments = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <PoolBlocksData />
+      <PaymentsData />
     </QueryClientProvider>
   )
 }
 
-export default PoolBlocks;
+export default Payments;

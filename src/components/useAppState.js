@@ -7,9 +7,10 @@ const initialState = Auth => ({
   minersIntervals: [],
   poolIntervals: [],
 
-  poolConfig: {},
   networkStats: {},
-  poolBlocks: [],
+  payments: [],
+  poolBlocks: {},
+  poolConfig: {},
   poolMinersChart: [],
   poolStats: {},
 
@@ -68,6 +69,12 @@ const reducer = (state, action) => {
             workers: { ...state.miners[action.address]?.workers, ...action?.workers },
           },
         },
+      };
+      break;
+    case 'UPDATE_PAYMENTS':
+      result = {
+        ...state,
+        payments: action.payments,
       };
       break;
     case 'UPDATE_POOL_BLOCKS':

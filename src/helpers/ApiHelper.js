@@ -46,6 +46,11 @@ export default class ApiHelper {
       .then(res => Promise.resolve(res));
   }
 
+  getPayments = (page, limit) => {
+    return this.fetch(`${this.apiURL}/pool/payments?${this.qs({ limit, page })}`)
+      .then(res => Promise.resolve(res));
+  }
+
   getPoolMinersChart = () => {
     return this.fetch(`${this.apiURL}/pool/chart/miners`)
       .then(res => Promise.resolve(res));

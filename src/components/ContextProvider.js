@@ -55,6 +55,7 @@ const AppContextProvider = props => {
   const getMiners = () => {
     Object.keys(JSON.parse(localStorage.getItem('ccx_pool')))
       .forEach(address => {
+        getMinerData(address);
         getMinerPayments(address);
       });
   }
@@ -100,6 +101,15 @@ const AppContextProvider = props => {
     return {
       rows,
       pageCount: Math.ceil(updatedState.current.poolStats.global.pool_statistics.totalBlocksFound / limit),
+    }
+  }
+
+  const getPayments = async (page = 0, limit = 10) => {
+    const rows = await Api.getPayments(page, limit);
+    dispatch({ type: 'UPDATE_PAYMENTS', payments: rows });
+    return {
+      rows,
+      pageCount: Math.ceil(updatedState.current.poolStats.global.pool_statistics.totalPayments / limit),
     }
   }
 
@@ -198,6 +208,7 @@ const AppContextProvider = props => {
     changePayoutThreshold,
     deleteMiner,
     getMinerPayments,
+    getPayments,
     getPoolBlocks,
     login,
     logout,
@@ -220,6 +231,7 @@ const AppContextProvider = props => {
       { fn: getPoolBlocks, time: appSettings.updateBlocksInterval },
       { fn: getPoolMinersChart, time: appSettings.updateStatsInterval },
       { fn: getPoolStats, time: appSettings.updateStatsInterval },
+      { fn: getPayments, time: appSettings.updateStatsInterval },
     );
 
     dispatch({ type: 'SET_POOL_INTERVALS', intervals });
