@@ -12,7 +12,8 @@ const queryClient = new QueryClient()
 
 const MinerPaymentsData = props => {
   const { address } = props;
-  const { actions } = useContext(AppContext);
+  const { actions, state } = useContext(AppContext);
+  const { miners } = state;
 
   const defaultData = useMemo(() => [], [])
   const [{ pageIndex, pageSize }, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
@@ -21,9 +22,13 @@ const MinerPaymentsData = props => {
   const fetchDataOptions = { address, pageIndex, pageSize };
 
   const dataQuery = useQuery(
-    ['data', fetchDataOptions],
+    ['minerPayments', address, fetchDataOptions],
     () => actions.getMinerPayments(address, pageIndex, pageSize),
-    { keepPreviousData: true }
+    {
+      enabled: Boolean(miners[address]?.stats?.txnCount),
+      keepPreviousData: true,
+      refetchOnWindowFocus: false,
+    }
   );
 
   const columns = [

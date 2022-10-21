@@ -47,7 +47,7 @@ const MinerStats = () => {
             <div>Invalid shares: {stats?.invalidShares > 0 ? stats.invalidShares.toLocaleString() : 0}</div>
             <div>Amount paid: <FormattedAmount amount={stats?.amtPaid} divide minimumFractionDigits={0} /></div>
             <div>Amount due: <FormattedAmount amount={stats?.amtDue} divide /></div>
-            <div>Total payments: {stats?.txnCount.toLocaleString()}</div>
+            <div>Total payments: {stats?.txnCount?.toLocaleString()}</div>
 
             <WorkerStats address={address} miners={miners} />
             <MinerPayments address={address} />

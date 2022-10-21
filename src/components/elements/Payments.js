@@ -11,7 +11,8 @@ const queryClient = new QueryClient()
 
 
 const PaymentsData = () => {
-  const { actions } = useContext(AppContext);
+  const { actions, state } = useContext(AppContext);
+  const { poolStats } = state;
 
   const defaultData = useMemo(() => [], [])
   const [{ pageIndex, pageSize }, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
@@ -20,9 +21,13 @@ const PaymentsData = () => {
   const fetchDataOptions = { pageIndex, pageSize };
 
   const dataQuery = useQuery(
-    ['data', fetchDataOptions],
+    ['payments', fetchDataOptions],
     () => actions.getPayments(pageIndex, pageSize),
-    { keepPreviousData: true }
+    {
+      enabled: Boolean(poolStats.global?.pool_statistics?.totalPayments),
+      keepPreviousData: true,
+      refetchOnWindowFocus: false,
+    }
   );
 
   const columns = [

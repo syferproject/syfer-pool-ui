@@ -23,8 +23,8 @@ const AppContextProvider = props => {
     if (Object.keys(miners).length === 0) dispatch({ type: 'CLEAR_MINERS_INTERVALS' });
   }
 
-  const getMinerData = async address => {
-    await Api.getMinerStats(address)
+  const getMinerData = address => {
+    Api.getMinerStats(address)
       .then(stats => {
         dispatch({ type: 'UPDATE_MINER', address, stats });
       });
@@ -43,7 +43,6 @@ const AppContextProvider = props => {
   }
 
   const getMinerPayments = async (address, page = 0, limit = 10) => {
-    if (!updatedState.current.miners[address]?.stats?.txnCount) await getMinerData(address);
     const rows = await Api.getMinerPayments(address, page, limit);
     dispatch({ type: 'UPDATE_MINER', address, payments: rows });
     return {
@@ -70,6 +69,7 @@ const AppContextProvider = props => {
       [address]: {}
     };
     dispatch({ type: 'SET_MINERS', miners });
+    getMinerData(address);
     getMinerPayments(address);
     // handle interval if first miner
   }
@@ -95,7 +95,6 @@ const AppContextProvider = props => {
   }
 
   const getPoolBlocks = async (page = 0, limit = 10) => {
-    if (!updatedState.current.poolStats.global?.pool_statistics?.totalBlocksFound) await getPoolStats();
     const rows = await Api.getPoolBlocks(page, limit);
     dispatch({ type: 'UPDATE_POOL_BLOCKS', poolBlocks: rows, poolType: 'global' });
     return {
@@ -123,8 +122,8 @@ const AppContextProvider = props => {
       });
   }
 
-  const getPoolStats = async () => {
-    await Api.getPoolStats()
+  const getPoolStats = () => {
+    Api.getPoolStats()
       .then(poolStats => {
         dispatch({ type: 'UPDATE_POOL_STATS', poolStats, poolType: 'global' });
         poolStats.pool_list.forEach(poolType => {
@@ -223,6 +222,7 @@ const AppContextProvider = props => {
 
     getConfig();
     getNetworkStats();
+    getPoolStats();
     getPoolMinersChart();
 
     const intervals = [];

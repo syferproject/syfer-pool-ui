@@ -13,7 +13,7 @@ const queryClient = new QueryClient()
 
 const PoolBlocksData = () => {
   const { actions, state } = useContext(AppContext);
-  const { networkStats, poolConfig } = state;
+  const { networkStats, poolConfig, poolStats } = state;
 
   const defaultData = useMemo(() => [], [])
   const [{ pageIndex, pageSize }, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
@@ -22,9 +22,13 @@ const PoolBlocksData = () => {
   const fetchDataOptions = { pageIndex, pageSize };
 
   const dataQuery = useQuery(
-    ['data', fetchDataOptions],
+    ['poolBlocks', fetchDataOptions],
     () => actions.getPoolBlocks(pageIndex, pageSize),
-    { keepPreviousData: true }
+    {
+      enabled: Boolean(poolStats.global?.pool_statistics?.totalBlocksFound),
+      keepPreviousData: true,
+      refetchOnWindowFocus: false,
+    }
   );
 
   const columns = [
