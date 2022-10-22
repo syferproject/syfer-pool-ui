@@ -27,6 +27,7 @@ const MinerSettings = () => {
       setPayoutThreshold(user.payoutThreshold / Math.pow(10, appSettings.coinDecimals));
       setEmailNotifications(Boolean(user.emailEnabled));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const handleEmailNotifications = () => {
@@ -41,6 +42,7 @@ const MinerSettings = () => {
     if (payoutThreshold > maximumPayoutThreshold) {
       setPayoutThresholdMessage(`Payout threshold can't be higher than ${maximumPayoutThreshold} CCX.`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [payoutThreshold]);
 
   useEffect(() => {
@@ -54,6 +56,7 @@ const MinerSettings = () => {
     if (newPassword.length > 0 && newPasswordConfirm.length > 0 && newPassword !== newPasswordConfirm) {
       setPasswordMessage('Passwords don\'t match');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newPassword, newPasswordConfirm])
 
   const showMessage = (element, msg) => {
