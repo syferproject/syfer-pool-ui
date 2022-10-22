@@ -1,5 +1,5 @@
 import { formatDistanceToNowStrict, intervalToDuration } from 'date-fns';
-import { useContext } from 'react';
+import { memo, useContext } from 'react';
 import { AppContext } from '../components/ContextProvider';
 import { formattedAmount, localeDecimal, localePercentage, zeroPad } from './utils';
 
@@ -144,7 +144,7 @@ export const PPLNSWindow = props => {
   )
 }
 
-export const TimeAgo = props => {
+export const TimeAgo = memo(props => {
   const { time } = props;
   return (
     <>
@@ -154,4 +154,4 @@ export const TimeAgo = props => {
       }
     </>
   )
-}
+})

@@ -16,6 +16,7 @@ const PoolCharts = () => {
     getValue: i => i.hs,
     elementType: 'area',
     scaleType: 'linear',
+    stacked: false,
   }], []);
 
   return (

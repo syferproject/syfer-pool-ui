@@ -72,7 +72,10 @@ const AppContextProvider = props => {
     };
     dispatch({ type: 'SET_MINERS', miners });
     getMinerData(address);
-    // handle interval if first miner
+
+    if (Object.keys(updatedState.current.miners).length === 0) {
+      dispatch({ type: 'SET_MINERS_INTERVALS', intervals: [{ fn: getMiners, time: state.appSettings.updateMinersInterval }] });
+    }
   }
 
   const getConfig = () => {

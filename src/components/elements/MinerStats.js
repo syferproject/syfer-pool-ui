@@ -2,6 +2,7 @@ import { Fragment, useContext } from 'react';
 import { useFormInput } from '../../helpers/hooks';
 import { FormattedAmount, HashRate, TimeAgo } from '../../helpers/Strings';
 import { AppContext } from '../ContextProvider';
+import MinerCharts from './MinerCharts';
 import MinerPayments from './MinerPayments';
 import WorkerStats from './WorkerStats';
 
@@ -36,7 +37,7 @@ const MinerStats = () => {
         <input type="submit" value="Submit"></input>
       </form>
       {Object.keys(miners).map(address => {
-        const { stats } = miners[address];
+        const { chartData, stats, workers } = miners[address];
         return (
           <Fragment key={address}>
             <div>{address} <button onClick={() => deleteMiner(address)}>Remove miner</button></div>
@@ -49,7 +50,10 @@ const MinerStats = () => {
             <div>Amount due: <FormattedAmount amount={stats?.amtDue} divide /></div>
             <div>Total payments: {stats?.txnCount?.toLocaleString()}</div>
 
-            <WorkerStats address={address} />
+            {workers && <WorkerStats workers={workers} chartData={chartData} />}
+            {chartData?.find(i => i.label === 'global')?.data.length > 0 &&
+              <MinerCharts data={chartData} />
+            }
             <MinerPayments address={address} />
           </Fragment>
         )
