@@ -24,8 +24,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "aws:deploy": "npm run build:clean && aws s3 cp --recursive ./build/ s3://pool-beta.conceal.network/ --cache-control max-age=30 --metadata-directive REPLACE && npm run aws:invalidate",
-    "aws:invalidate": "aws configure set preview.cloudfront true && aws cloudfront create-invalidation --distribution-id EP6WRW9O0JWG3 --paths \"/*\"",
+    "aws:deploy": "npm run build:clean && aws s3 cp --recursive ./build/ s3://${S3_BUCKET_NAME}/ --cache-control max-age=30 --metadata-directive REPLACE && npm run aws:invalidate",
+    "aws:invalidate": "aws configure set preview.cloudfront true && aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} --paths \"/*\"",
     "build:clean": "rm -rf ./build && react-scripts build"
   },
   "eslintConfig": {
