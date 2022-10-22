@@ -2,7 +2,6 @@ import { Fragment } from 'react';
 import { AverageHashRate, HashRate, TimeAgo } from '../../helpers/Strings';
 
 
-
 const MinerStats = props => {
   const { chartData, workers } = props;
 

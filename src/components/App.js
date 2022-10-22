@@ -1,5 +1,5 @@
-import Config from './elements/Config';
 import AppContextProvider from './ContextProvider';
+import Config from './elements/Config';
 import MinerSettings from './elements/MinerSettings';
 import MinerStats from './elements/MinerStats';
 import NetworkStats from './elements/NetworkStats';

@@ -39,8 +39,7 @@ const AppContextProvider = props => {
     Api.getMinerChart(address)
       .then(res => {
         const chartData = Object.keys(res)
-          .map(label => ({ label, data: res[label] }))
-          .sort((a, b) => a.label.localeCompare(b.label));
+          .map(label => ({ label, data: res[label] }));
         dispatch({ type: 'UPDATE_MINER', address, chartData });
       })
   }
