@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512px" height="512px" viewBox="0 0 512 512" version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<style type="text/css">
+		rect {
+			fill: rgb(34, 34, 34);
+		}
+		@media (prefers-color-scheme: dark) {
+			rect { fill: none; }
+		}
+	</style>
+	<g id="logo">
+		<rect width="512" height="512"/>
+
+		<polygon style="fill: rgb(166, 166, 166);" points="156 135 260 87 362 136 333 151 260 117 182 154 156 135"/>
+		<polygon style="fill: rgb(166, 166, 166);" points="262 151 262 124 330 154 330 181 262 151"/>
+		<polygon style="fill: rgb(166, 166, 166);" points="335 155 363 140 388 186 335 181 335 155"/>
+		<polygon style="fill: rgb(166, 166, 166);" points="262 413 262 156 289 167 289 401 262 413"/>
+
+		<polygon style="fill: rgb(255, 255, 255);" points="185 157 256 124 256 152 185 185 185 157"/>
+		<polygon style="fill: rgb(255, 255, 255);" points="180 158 180 185 127 193 153 139 180 158"/>
+		<polygon style="fill: rgb(255, 255, 255);" points="228 401 228 169 256 156 256 413 228 401"/>
+	</g>
+</svg>
