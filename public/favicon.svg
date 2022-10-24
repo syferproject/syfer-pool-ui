@@ -11,13 +11,13 @@
 	<g id="logo">
 		<rect width="512" height="512"/>
 
-		<polygon style="fill: rgb(166, 166, 166);" points="156 135 260 87 362 136 333 151 260 117 182 154 156 135"/>
-		<polygon style="fill: rgb(166, 166, 166);" points="262 151 262 124 330 154 330 181 262 151"/>
-		<polygon style="fill: rgb(166, 166, 166);" points="335 155 363 140 388 186 335 181 335 155"/>
-		<polygon style="fill: rgb(166, 166, 166);" points="262 413 262 156 289 167 289 401 262 413"/>
+		<polygon style="fill: rgb(166, 166, 166);" points="252 97 363 125 411 228 379 221 344 149 260 128 252 97"/>
+		<polygon style="fill: rgb(166, 166, 166);" points="324 176 341 155 374 222 357 242 324 176"/>
+		<polygon style="fill: rgb(166, 166, 166);" points="378 226 409 232 399 283 361 246 378 226"/>
+		<polygon style="fill: rgb(166, 166, 166);" points="158 379 321 180 334 206 186 387 158 379"/>
 
-		<polygon style="fill: rgb(255, 255, 255);" points="185 157 256 124 256 152 185 185 185 157"/>
-		<polygon style="fill: rgb(255, 255, 255);" points="180 158 180 185 127 193 153 139 180 158"/>
-		<polygon style="fill: rgb(255, 255, 255);" points="228 401 228 169 256 156 256 413 228 401"/>
+		<polygon style="fill: rgb(255, 255, 255);" points="260 132 336 152 318 173 243 154 260 132"/>
+		<polygon style="fill: rgb(255, 255, 255);" points="256 130 239 151 193 123 247 98 256 130"/>
+		<polygon style="fill: rgb(255, 255, 255);" points="139 348 286 169 316 176 153 375 139 348"/>
 	</g>
 </svg>
