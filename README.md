@@ -1,6 +1,6 @@
-# Conceal Pool UI
+# Syfer Pool UI
 
-> UI for [Conceal mining pool](https://pool.conceal.network/)
+> UI for [Syfer mining pool](https://pool.syfer.network/)
 
 ## Requirements
 
@@ -10,8 +10,8 @@
 ## Local Development
 
 ```shell
-$ git clone https://github.com/bomb-on/conceal-pool-ui.git
-$ cd conceal-pool-ui
+$ git clone https://github.com/bomb-on/syfer-pool-ui.git
+$ cd syfer-pool-ui
 $ npm install
 $ npm start
 ```

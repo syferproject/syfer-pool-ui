@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-quer
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { useContext, useMemo, useState } from 'react';
 import { BsCheck, BsChevronLeft, BsChevronRight, BsUnlockFill, BsX } from 'react-icons/bs';
-import { CCXExplorerLink, FormattedAmount, TimeAgo } from '../../helpers/Strings';
+import { SYFRExplorerLink, FormattedAmount, TimeAgo } from '../../helpers/Strings';
 import { localePercentage } from '../../helpers/utils';
 import { AppContext } from '../ContextProvider';
 
@@ -57,7 +57,7 @@ const PoolBlocksData = () => {
     }),
     columnHelper.accessor('hash', {
       header: () => 'Hash',
-      cell: info => <CCXExplorerLink hash={info.getValue()} type="block" shortHash />,
+      cell: info => <SYFRExplorerLink hash={info.getValue()} type="block" shortHash />,
     }),
     columnHelper.accessor('diff', {
       header: () => 'Effort',

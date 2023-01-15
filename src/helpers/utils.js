@@ -17,7 +17,7 @@ export const localePercentage = (maximumFractionDigits = 2, minimumFractionDigit
 
 export const formattedAmount = ({
   amount,
-  currency = 'CCX',
+  currency = 'SYFR',
   formatOptions = { minimumFractionDigits: 5, maximumFractionDigits: 5 },
   showCurrency,
   useSymbol,

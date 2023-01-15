@@ -1,7 +1,7 @@
 import { Fragment, useContext } from 'react';
 import {
   BlockTime,
-  CCXExplorerLink,
+  SYFRExplorerLink,
   CurrentEffort,
   FormattedAmount,
   HashRate,
@@ -27,7 +27,7 @@ const PoolStats = () => {
       <div>Current block: {stats?.currentBlock.toLocaleString()}</div>
       <div>Hash rate: <HashRate hr={stats?.hashRate} /></div>
       <div>Network percentage: <NetworkPercentage hashRate={stats?.hashRate} difficulty={difficulty} /></div>
-      <div>Last block: {stats?.lastBlockFound.toLocaleString()} <CCXExplorerLink hash={poolBlocks.global?.[0].hash} shortHash type="block" /></div>
+      <div>Last block: {stats?.lastBlockFound.toLocaleString()} <SYFRExplorerLink hash={poolBlocks.global?.[0].hash} shortHash type="block" /></div>
       <div>Last block found: <TimeAgo time={stats?.lastBlockFoundTime} /></div>
       <div>Miners: {stats?.miners.toLocaleString()}</div>
       <div>Round hashes: {stats?.roundHashes.toLocaleString()}</div>
@@ -44,7 +44,7 @@ const PoolStats = () => {
             <div>Hash rate: <HashRate hr={stats.hashRate} /></div>
             <div>Network percentage: {stats.hashRate ? <NetworkPercentage hashRate={stats.hashRate} difficulty={difficulty} /> : '-'}</div>
             <div>Current effort: <CurrentEffort roundHashes={stats.roundHashes} difficulty={difficulty} /></div>
-            <div>Last block: {stats.lastBlockFound.toLocaleString()} <CCXExplorerLink hash={poolBlocks[poolType]?.[0].hash} shortHash type="block" /></div>
+            <div>Last block: {stats.lastBlockFound.toLocaleString()} <SYFRExplorerLink hash={poolBlocks[poolType]?.[0].hash} shortHash type="block" /></div>
             <div>Last block found: <TimeAgo time={stats.lastBlockFoundTime} /></div>
             <div>Block reward: <FormattedAmount amount={poolBlocks[poolType]?.[0].value} divide minimumFractionDigits={0} /></div>
             <div>Miners: {stats.miners.toLocaleString()}</div>

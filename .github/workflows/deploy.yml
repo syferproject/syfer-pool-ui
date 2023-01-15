@@ -10,7 +10,7 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_DEV }}
-  PUBLIC_URL: https://pool-beta.conceal.network
+  PUBLIC_URL: https://pool-beta.syfer.network
   S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME_DEV }}
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
         if: endsWith(github.ref, '/master')
         run: |
           echo "CLOUDFRONT_DISTRIBUTION_ID=${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" >> $GITHUB_ENV
-          echo "PUBLIC_URL=https://pool.conceal.network" >> $GITHUB_ENV
+          echo "PUBLIC_URL=https://pool.syfer.network" >> $GITHUB_ENV
           echo "S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}" >> $GITHUB_ENV
       - name: Setup Node.js ${{ matrix.node }}
         uses: actions/setup-node@v3

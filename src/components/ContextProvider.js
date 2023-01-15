@@ -10,7 +10,7 @@ const Auth = new AuthHelper();
 
 const AppContextProvider = props => {
   const [state, dispatch, updatedState] = useAppState(Auth);
-  const [storedMiners, setStoredMiners] = useLocalStorage('ccx_pool');
+  const [storedMiners, setStoredMiners] = useLocalStorage('syfr_pool');
   const Api = new ApiHelper(Auth);
 
   const deleteMiner = address => {
@@ -54,7 +54,7 @@ const AppContextProvider = props => {
   }
 
   const getMiners = () => {
-    Object.keys(JSON.parse(localStorage.getItem('ccx_pool')))
+    Object.keys(JSON.parse(localStorage.getItem('syfr_pool')))
       .forEach(address => {
         getMinerData(address);
       });

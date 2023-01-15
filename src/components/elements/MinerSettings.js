@@ -37,10 +37,10 @@ const MinerSettings = () => {
   useEffect(() => {
     // setPayoutThresholdMessage('');
     if (payoutThreshold < minimumPayoutThreshold) {
-      setPayoutThresholdMessage(`Payout threshold can't be lower than ${minimumPayoutThreshold} CCX.`);
+      setPayoutThresholdMessage(`Payout threshold can't be lower than ${minimumPayoutThreshold} SYFR.`);
     }
     if (payoutThreshold > maximumPayoutThreshold) {
-      setPayoutThresholdMessage(`Payout threshold can't be higher than ${maximumPayoutThreshold} CCX.`);
+      setPayoutThresholdMessage(`Payout threshold can't be higher than ${maximumPayoutThreshold} SYFR.`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [payoutThreshold]);
@@ -128,7 +128,7 @@ const MinerSettings = () => {
                     placeholder={payoutThreshold}
                     aria-label="payout-threshold"
                   />
-                </label> CCX
+                </label> SYFR
                 <button
                   type="submit"
                   disabled={

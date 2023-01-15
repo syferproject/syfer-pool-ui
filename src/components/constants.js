@@ -1,6 +1,6 @@
 export const constants = {
   apiURL: process.env.REACT_APP_API_ENDPOINT,
-  explorerURL: 'https://explorer.conceal.network',
+  explorerURL: 'https://explorer.syfer.network',
   updateBlocksInterval: 15,
   updateMinersInterval: 15,
   updateStatsInterval: 30,

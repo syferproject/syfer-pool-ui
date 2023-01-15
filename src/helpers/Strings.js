@@ -22,7 +22,7 @@ export const BlockTime = props => {
   )
 }
 
-export const CCXExplorerLink = props => {
+export const SYFRExplorerLink = props => {
   const { state } = useContext(AppContext);
   const { appSettings } = state;
   const {
@@ -66,7 +66,7 @@ export const FormattedAmount = props => {
   const { appSettings } = state;
   let {
     amount,
-    currency = 'CCX',
+    currency = 'SYFR',
     divide = false,
     maximumFractionDigits = appSettings.coinDecimals,
     minimumFractionDigits = appSettings.coinDecimals,

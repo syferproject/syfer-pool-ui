@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 export const useMountEffect = fn => useEffect(fn, []);  // eslint-disable-line react-hooks/exhaustive-deps
 
 const getStorageValue = (key, defaultValue = {}) => {
-  const storageData = localStorage.getItem('ccx_pool');
+  const storageData = localStorage.getItem('syfr_pool');
   const localData = JSON.parse(storageData);
   return localData || defaultValue;
 }

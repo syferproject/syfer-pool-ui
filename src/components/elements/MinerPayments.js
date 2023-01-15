@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-quer
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { useContext, useMemo, useState } from 'react';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
-import { CCXExplorerLink, FormattedAmount, TimeAgo } from '../../helpers/Strings';
+import { SYFRExplorerLink, FormattedAmount, TimeAgo } from '../../helpers/Strings';
 import { AppContext } from '../ContextProvider';
 
 
@@ -48,7 +48,7 @@ const MinerPaymentsData = props => {
     }),
     columnHelper.accessor('txnHash', {
       header: () => 'Transaction Hash',
-      cell: info => <CCXExplorerLink hash={info.getValue()} shortHash />,
+      cell: info => <SYFRExplorerLink hash={info.getValue()} shortHash />,
     }),
     columnHelper.accessor('mixin', {
       header: () => 'Mixin',
